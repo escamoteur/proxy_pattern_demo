@@ -20,6 +20,7 @@ class PostProxy extends ChangeNotifier {
     });
   }
 
+  /// optimistic UI update
   Future<void> like(BuildContext context) async {
     _likeOverride = true;
     notifyListeners();

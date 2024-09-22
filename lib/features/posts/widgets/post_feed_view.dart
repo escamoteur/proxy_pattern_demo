@@ -11,6 +11,10 @@ class PostFeedView extends WatchingWidget {
   @override
   Widget build(BuildContext context) {
     final int postsCount = watch(dataSource.postsCount).value;
+    final bool isLoading = watch(dataSource.isLoading).value;
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return ListView.builder(
       itemBuilder: (context, index) {
         final post = dataSource.getPostAtIndex(index);
