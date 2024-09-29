@@ -24,8 +24,11 @@ class PostProxy extends ChangeNotifier {
   int get id => _target!.id;
   String get title => _target!.title;
   String get imageUrl => _target!.imageUrl;
-  bool get isLiked => _likeOverride ?? _target!.isLiked;
+  bool get isLiked => _optimisticLike ?? _likeOverride ?? _target!.isLiked;
+  // last successful like state change without update from the server
   bool? _likeOverride;
+  // optimistic UI update
+  bool? _optimisticLike;
 
   /// create a combines ValueListenable based on the updateDataCommands  and local updateFromApiCommand
   late ValueListenable<bool> commandRestrions = di<PostManager>()
@@ -44,9 +47,10 @@ class PostProxy extends ChangeNotifier {
   late final likeCommand = Command.createAsyncNoParamNoResult(
     () async {
       /// optimistic UI update
-      _likeOverride = true;
+      _optimisticLike = true;
       notifyListeners();
       await di<ApiClient>().likePost(_target!.id);
+      _likeOverride = true;
     },
     // block the command if we update from the api
     restriction: commandRestrions,
@@ -55,19 +59,18 @@ class PostProxy extends ChangeNotifier {
   )..errors.listen(
       (e, _) {
         // reverse the optimistic UI update
-        _likeOverride = !_likeOverride!;
+        _optimisticLike = null;
         notifyListeners();
-
-        updateFromApiCommand.execute();
       },
     );
 
   late final unlikeCommand = Command.createAsyncNoParamNoResult(
     () async {
       /// optimistic UI update
-      _likeOverride = false;
+      _optimisticLike = false;
       notifyListeners();
       await di<ApiClient>().unlikePost(_target!.id);
+      _likeOverride = false;
     },
     // block the command if we update from the api
     restriction: commandRestrions,
@@ -75,10 +78,8 @@ class PostProxy extends ChangeNotifier {
   )..errors.listen(
       (e, _) {
         // reverse the optimistic UI update
-        _likeOverride = !_likeOverride!;
+        _likeOverride = null;
         notifyListeners();
-
-        updateFromApiCommand.execute();
       },
     );
 
