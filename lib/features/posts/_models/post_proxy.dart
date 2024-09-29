@@ -30,8 +30,9 @@ class PostProxy extends ChangeNotifier {
   // optimistic UI update
   bool? _optimisticLike;
 
-  /// create a combines ValueListenable based on the updateDataCommands  and local updateFromApiCommand
-  late ValueListenable<bool> commandRestrions = di<PostManager>()
+  /// create a combined ValueListenable based on the updateDataCommands of
+  /// the data sources and local updateFromApiCommand
+  late ValueListenable<bool> commandRestrictions = di<PostManager>()
       .updateFromApiIsExecuting
       .combineLatest(updateFromApiCommand.isExecuting, (a, b) => a || b);
 
@@ -53,7 +54,7 @@ class PostProxy extends ChangeNotifier {
       _likeOverride = true;
     },
     // block the command if we update from the api
-    restriction: commandRestrions,
+    restriction: commandRestrictions,
     // we want that the error is handled locally and globally in TheAppImplementation
     errorFilter: const ErrorHandlerLocalAndGlobal(),
   )..errors.listen(
@@ -73,7 +74,7 @@ class PostProxy extends ChangeNotifier {
       _likeOverride = false;
     },
     // block the command if we update from the api
-    restriction: commandRestrions,
+    restriction: commandRestrictions,
     errorFilter: const ErrorHandlerLocalAndGlobal(),
   )..errors.listen(
       (e, _) {
@@ -85,7 +86,8 @@ class PostProxy extends ChangeNotifier {
 
   @override
   void dispose() {
-    /// dispose all Commands
+    /// we have to dispose all Commands because
+    /// they contain a lot of ValueNotifiers
     updateFromApiCommand.dispose();
     likeCommand.dispose();
     unlikeCommand.dispose();
