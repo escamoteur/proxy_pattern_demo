@@ -3,8 +3,11 @@ import 'package:flutter_command/flutter_command.dart';
 import 'package:watch_it/watch_it.dart';
 
 class CommandIconButton extends WatchingWidget {
-  const CommandIconButton(
-      {required this.command, required this.icon, super.key});
+  const CommandIconButton({
+    required this.command,
+    required this.icon,
+    super.key,
+  });
 
   final Command command;
   final IconData icon;

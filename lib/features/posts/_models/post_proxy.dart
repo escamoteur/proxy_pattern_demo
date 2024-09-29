@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:proxy_pattern_demo/features/posts/_manager/post_manager_.dart';
 import 'package:proxy_pattern_demo/shared/services/api_client_.dart';
@@ -8,15 +8,7 @@ class PostProxy extends ChangeNotifier {
   PostDto? _target;
   int referenceCount = 0;
 
-  PostProxy(this._target) {
-    likeCommand.canExecute.listen((canLike, _) {
-      if (canLike) {
-        print('User can like the post');
-      } else {
-        print('User cannot like the post');
-      }
-    });
-  }
+  PostProxy(this._target);
 
   //setter for the target
   set target(PostDto value) {
@@ -35,13 +27,17 @@ class PostProxy extends ChangeNotifier {
   bool get isLiked => _likeOverride ?? _target!.isLiked;
   bool? _likeOverride;
 
+  /// create a combines ValueListenable based on the updateDataCommands  and local updateFromApiCommand
+  late ValueListenable<bool> commandRestrions = di<PostManager>()
+      .updateFromApiIsExecuting
+      .combineLatest(updateFromApiCommand.isExecuting, (a, b) => a || b);
+
   late final updateFromApiCommand = Command.createAsyncNoParamNoResult(
     () async {
       final postDto = await di<ApiClient>().getPost(_target!.id);
       _updateTarget(postDto);
     },
-
-    /// block the command if the updateFromApiCommand is executing
+    // block the command if any updateDataCommand is executing
     restriction: di<PostManager>().updateFromApiIsExecuting,
   );
 
@@ -52,15 +48,14 @@ class PostProxy extends ChangeNotifier {
       notifyListeners();
       await di<ApiClient>().likePost(_target!.id);
     },
-
-    /// block the command if the updateFromApiCommand is executing
-    restriction: updateFromApiCommand.isExecuting,
-
-    /// we want that the error is handled locally and globally in TheAppImplementation
+    // block the command if we update from the api
+    restriction: commandRestrions,
+    // we want that the error is handled locally and globally in TheAppImplementation
     errorFilter: const ErrorHandlerLocalAndGlobal(),
   )..errors.listen(
       (e, _) {
         _likeOverride = null;
+
         notifyListeners();
       },
     );
@@ -72,9 +67,8 @@ class PostProxy extends ChangeNotifier {
       notifyListeners();
       await di<ApiClient>().unlikePost(_target!.id);
     },
-
-    /// block the command if the updateFromApiCommand is executing
-    restriction: updateFromApiCommand.isExecuting,
+    // block the command if we update from the api
+    restriction: commandRestrions,
     errorFilter: const ErrorHandlerLocalAndGlobal(),
   )..errors.listen(
       (e, _) {

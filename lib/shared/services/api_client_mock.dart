@@ -34,7 +34,7 @@ class ApiClientMock implements ApiClient {
   @override
   Future<void> likePost(int id) {
     return Future.delayed(
-      const Duration(seconds: 1),
+      const Duration(seconds: 2),
       () {
         if (Random().nextBool()) {
           throw Exception('Failed to like post');
@@ -46,7 +46,7 @@ class ApiClientMock implements ApiClient {
   @override
   Future<void> unlikePost(int id) {
     return Future.delayed(
-      const Duration(seconds: 1),
+      const Duration(seconds: 2),
       () {
         if (Random().nextBool()) {
           throw Exception('Failed to unlike post');
