@@ -10,17 +10,34 @@ class PostFeedView extends WatchingWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// update the data source when the widget is first built
+    callOnce((_) => dataSource.updateData());
+
     final int postsCount = watch(dataSource.postsCount).value;
     final bool isLoading = watch(dataSource.isLoading).value;
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        final post = dataSource.getPostAtIndex(index);
-        return PostCard(post: post);
-      },
-      itemCount: postsCount,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () {
+            dataSource.updateData();
+          },
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              final post = dataSource.getPostAtIndex(index);
+              return PostCard(post: post);
+            },
+            itemCount: postsCount,
+          ),
+        ),
+      ],
     );
   }
 }

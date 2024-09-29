@@ -10,6 +10,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PostFeedView(dataSource: di<PostManager>().postsFeed);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(child: PostFeedView(dataSource: di<PostManager>().postsFeed)),
+        Expanded(
+            child: PostFeedView(dataSource: di<PostManager>().dogPostsFeed)),
+      ],
+    );
   }
 }

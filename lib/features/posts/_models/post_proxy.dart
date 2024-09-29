@@ -4,9 +4,22 @@ import 'package:watch_it/watch_it.dart';
 
 class PostProxy extends ChangeNotifier {
   PostDto? _target;
+  int referenceCount = 0;
 
   PostProxy(this._target);
 
+  //setter for the target
+  set target(PostDto value) {
+    _upDateTarget(value);
+  }
+
+  void _upDateTarget(PostDto postDto) {
+    _likeOverride = null;
+    _target = postDto;
+    notifyListeners();
+  }
+
+  int get id => _target!.id;
   String get title => _target!.title;
   String get imageUrl => _target!.imageUrl;
   bool get isLiked => _likeOverride ?? _target!.isLiked;
@@ -14,9 +27,7 @@ class PostProxy extends ChangeNotifier {
 
   void updateFromApi() {
     di<ApiClient>().getPost(_target!.id).then((postDto) {
-      _target = postDto;
-      _likeOverride = null;
-      notifyListeners();
+      _upDateTarget(postDto);
     });
   }
 

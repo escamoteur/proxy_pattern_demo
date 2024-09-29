@@ -19,7 +19,8 @@ class PostDto {
       id: id,
       title: json['title'],
       imageUrl: json['imageUrl'],
-      isLiked: json['isLiked'],
+      isLiked: Random().nextBool(),
+      // isLiked: json['isLiked'],
     );
   }
 }

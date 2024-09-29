@@ -20,18 +20,6 @@ class MainApp extends WatchingWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Proxy Pattern Demo'),
-          actions: [
-            if (appInitialized)
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () {
-                  di<PostManager>().postsFeed.updateData();
-                },
-              ),
-            const SizedBox(
-              width: 64,
-            ),
-          ],
         ),
         body: appInitialized
             ? const HomePage()
