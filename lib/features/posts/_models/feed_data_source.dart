@@ -21,22 +21,22 @@ class FeedDataSource {
     return _posts[index];
   }
 
-  void updateData() {
+  void updateData() async {
+    _isLoading.value = true;
+    final postDtos = await di<ApiClient>().getPosts();
+
     /// decrement the reference count of all proxies
     /// and release the ones that are not anywhere else
     di<PostManager>().releaseProxies(_posts);
 
     _posts.clear();
-    _isLoading.value = true;
-    di<ApiClient>().getPosts().then((postDtos) {
-      for (var postDto in postDtos) {
-        if (filter != null && !filter!(postDto)) {
-          continue;
-        }
-        _posts.add(di<PostManager>().createProxy(postDto));
+    for (var postDto in postDtos) {
+      if (filter != null && !filter!(postDto)) {
+        continue;
       }
-      _isLoading.value = false;
-      _postsCount.value = _posts.length;
-    });
+      _posts.add(di<PostManager>().createProxy(postDto));
+    }
+    _isLoading.value = false;
+    _postsCount.value = _posts.length;
   }
 }
