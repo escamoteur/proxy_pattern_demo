@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:proxy_pattern_demo/features/posts/_manager/post_manager_.dart';
 import 'package:proxy_pattern_demo/features/posts/_models/feed_data_source.dart';
-import 'package:proxy_pattern_demo/features/posts/_models/post_proxy.dart';
+import 'package:proxy_pattern_demo/features/posts/widgets/post_card.dart';
 import 'package:watch_it/watch_it.dart';
 
 class PostFeedView extends WatchingWidget {
@@ -21,9 +22,9 @@ class PostFeedView extends WatchingWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        _FeedUpdateWidget(dataSource: dataSource),
+        _FeedUpdateWidgetButton(dataSource: dataSource),
         if (isLoading)
-          Expanded(child: const Center(child: CircularProgressIndicator()))
+          const Expanded(child: Center(child: CircularProgressIndicator()))
         else
           Expanded(
             child: ListView.builder(
@@ -39,8 +40,8 @@ class PostFeedView extends WatchingWidget {
   }
 }
 
-class _FeedUpdateWidget extends WatchingWidget {
-  const _FeedUpdateWidget({
+class _FeedUpdateWidgetButton extends WatchingWidget {
+  const _FeedUpdateWidgetButton({
     required this.dataSource,
   });
 
@@ -48,60 +49,12 @@ class _FeedUpdateWidget extends WatchingWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool canUpdate = watch(dataSource.updateDataCommand.canExecute).value;
+    final bool anyUpdateInProgress =
+        watchValue((PostManager pm) => pm.updateFromApiIsExecuting);
     return IconButton(
       icon: const Icon(Icons.refresh),
-      onPressed: canUpdate
-          ? () {
-              dataSource.updateDataCommand();
-            }
-          : null,
-    );
-  }
-}
-
-class PostCard extends WatchingWidget {
-  const PostCard({
-    super.key,
-    required this.post,
-  });
-
-  final PostProxy post;
-
-  @override
-  Widget build(BuildContext context) {
-    /// watch the post to rebuild the widget when the post changes
-    watch(post);
-    return Card.outlined(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AspectRatio(aspectRatio: 16 / 9, child: Image.network(post.imageUrl)),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(post.title),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (post.isLiked)
-                IconButton(
-                  icon: const Icon(Icons.favorite),
-                  onPressed: () => post.unlike(context),
-                )
-              else
-                IconButton(
-                  icon: const Icon(Icons.favorite_border),
-                  onPressed: () => post.like(context),
-                ),
-              const SizedBox(width: 8),
-              IconButton(
-                  onPressed: post.updateFromApi,
-                  icon: const Icon(Icons.refresh)),
-            ],
-          ),
-        ],
-      ),
+      onPressed:
+          !anyUpdateInProgress ? dataSource.updateDataCommand.execute : null,
     );
   }
 }

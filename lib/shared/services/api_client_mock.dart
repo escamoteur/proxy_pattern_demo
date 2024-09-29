@@ -15,17 +15,18 @@ class ApiClientMock implements ApiClient {
     return this;
   }
 
-  late final List<PostDto> _mockData;
+  late List<PostDto> _mockData;
 
   @override
   Future<List<PostDto>> getPosts() async {
     final List<dynamic> parsed = json.decode(_jsonString);
     await Future.delayed(const Duration(seconds: 2));
-    return parsed
+    _mockData = parsed
         .asMap()
         .map((index, value) => MapEntry(index, PostDto.fromJson(index, value)))
         .values
         .toList();
+    return _mockData;
   }
 
   /// Mock implementation of likePost with a delay of 1 second
@@ -57,7 +58,7 @@ class ApiClientMock implements ApiClient {
   /// Mock implementation of getPost with a delay of 1 second
   /// with random like state
   @override
-  Future<PostDto> getPost(int id) {
+  Future<PostDto> getPost(int id) async {
     return Future.delayed(
       const Duration(seconds: 1),
       () {

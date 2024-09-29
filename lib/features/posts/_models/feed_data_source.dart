@@ -20,20 +20,22 @@ class FeedDataSource {
     return _posts[index];
   }
 
-  late final updateDataCommand = Command.createAsyncNoParamNoResult(() async {
-    final postDtos = await di<ApiClient>().getPosts();
+  late final updateDataCommand = Command.createAsyncNoParamNoResult(
+    () async {
+      final postDtos = await di<ApiClient>().getPosts();
 
-    /// decrement the reference count of all proxies
-    /// and release the ones that are not anywhere else
-    di<PostManager>().releaseProxies(_posts);
-    _posts.clear();
+      /// decrement the reference count of all proxies
+      /// and release the ones that are not anywhere else
+      di<PostManager>().releaseProxies(_posts);
+      _posts.clear();
 
-    for (var postDto in postDtos) {
-      if (filter != null && !filter!(postDto)) {
-        continue;
+      for (var postDto in postDtos) {
+        if (filter != null && !filter!(postDto)) {
+          continue;
+        }
+        _posts.add(di<PostManager>().createProxy(postDto));
       }
-      _posts.add(di<PostManager>().createProxy(postDto));
-    }
-    _postsCount.value = _posts.length;
-  });
+      _postsCount.value = _posts.length;
+    },
+  );
 }

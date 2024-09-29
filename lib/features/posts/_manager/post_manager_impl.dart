@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_command/flutter_command.dart';
 import 'package:proxy_pattern_demo/features/posts/_manager/post_manager_.dart';
 import 'package:proxy_pattern_demo/features/posts/_models/feed_data_source.dart';
 import 'package:proxy_pattern_demo/features/posts/_models/post_proxy.dart';
@@ -12,6 +14,14 @@ class PostManagerImplementation extends PostManager {
   );
   @override
   FeedDataSource get dogPostsFeed => _dogPostsFeed;
+
+  late final ValueListenable<bool> _updateFromApiIsExecuting =
+      _postsFeed.updateDataCommand.isExecuting.combineLatest(
+          _dogPostsFeed.updateDataCommand.isExecuting, (a, b) => a || b);
+
+  @override
+  ValueListenable<bool> get updateFromApiIsExecuting =>
+      _updateFromApiIsExecuting;
 
   /// cache for already proxied posts
   final Map<int, PostProxy> _proxyRepository = {};

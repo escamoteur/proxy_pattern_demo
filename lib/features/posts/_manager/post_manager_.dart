@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:proxy_pattern_demo/features/posts/_models/feed_data_source.dart';
 import 'package:proxy_pattern_demo/features/posts/_models/post_proxy.dart';
 import 'package:proxy_pattern_demo/shared/services/api_client_.dart';
@@ -12,6 +13,11 @@ abstract class PostManager {
   List<PostProxy> createProxies(List<PostDto> postDtos);
   void releaseProxies(List<PostProxy> proxies);
   void releaseProxy(PostProxy proxy);
+
+  /// To show the flexibilty of declarative logic with commands we will
+  /// block that you can all any command to update the data from the api
+  /// while any update is in progress
+  ValueListenable<bool> get updateFromApiIsExecuting;
 
   /// this class would normally contain the business logic for the posts feature
   /// like creating, or deleting posts, for the first part of the tutorial
