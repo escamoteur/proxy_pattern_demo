@@ -11,33 +11,51 @@ class PostFeedView extends WatchingWidget {
   @override
   Widget build(BuildContext context) {
     /// update the data source when the widget is first built
-    callOnce((_) => dataSource.updateData());
+    callOnce((_) => dataSource.updateDataCommand());
 
     final int postsCount = watch(dataSource.postsCount).value;
-    final bool isLoading = watch(dataSource.isLoading).value;
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    final bool isLoading =
+        watch(dataSource.updateDataCommand.isExecuting).value;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        IconButton(
-          icon: const Icon(Icons.refresh),
-          onPressed: () {
-            dataSource.updateData();
-          },
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              final post = dataSource.getPostAtIndex(index);
-              return PostCard(post: post);
-            },
-            itemCount: postsCount,
+        _FeedUpdateWidget(dataSource: dataSource),
+        if (isLoading)
+          Expanded(child: const Center(child: CircularProgressIndicator()))
+        else
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                final post = dataSource.getPostAtIndex(index);
+                return PostCard(post: post);
+              },
+              itemCount: postsCount,
+            ),
           ),
-        ),
       ],
+    );
+  }
+}
+
+class _FeedUpdateWidget extends WatchingWidget {
+  const _FeedUpdateWidget({
+    required this.dataSource,
+  });
+
+  final FeedDataSource dataSource;
+
+  @override
+  Widget build(BuildContext context) {
+    final bool canUpdate = watch(dataSource.updateDataCommand.canExecute).value;
+    return IconButton(
+      icon: const Icon(Icons.refresh),
+      onPressed: canUpdate
+          ? () {
+              dataSource.updateDataCommand();
+            }
+          : null,
     );
   }
 }

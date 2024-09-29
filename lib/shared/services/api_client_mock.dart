@@ -9,6 +9,7 @@ class ApiClientMock implements ApiClient {
   late final String _jsonString;
 
   Future<ApiClient> init() async {
+    await Future.delayed(const Duration(seconds: 2));
     _jsonString = await rootBundle.loadString('assets/mock_data.json');
 
     return this;

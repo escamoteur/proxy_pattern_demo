@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   watch_it: 1.5.0
+  flutter_command: ^6.0.0
 
 dev_dependencies:
   flutter_test:
