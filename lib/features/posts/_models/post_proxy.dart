@@ -24,11 +24,9 @@ class PostProxy extends ChangeNotifier {
   String get title => _target!.title;
   String get imageUrl => _target!.imageUrl;
   bool get isLiked => _optimisticLike ?? _likeOverride ?? _target!.isLiked;
-
-  /// last successful like state change without update from the server
+  // last successful like state change without update from the server
   bool? _likeOverride;
-
-  /// optimistic UI update
+  // optimistic UI update
   bool? _optimisticLike;
 
   void updateFromApi() {
