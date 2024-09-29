@@ -54,9 +54,11 @@ class PostProxy extends ChangeNotifier {
     errorFilter: const ErrorHandlerLocalAndGlobal(),
   )..errors.listen(
       (e, _) {
-        _likeOverride = null;
-
+        // reverse the optimistic UI update
+        _likeOverride = !_likeOverride!;
         notifyListeners();
+
+        updateFromApiCommand.execute();
       },
     );
 
@@ -72,8 +74,11 @@ class PostProxy extends ChangeNotifier {
     errorFilter: const ErrorHandlerLocalAndGlobal(),
   )..errors.listen(
       (e, _) {
-        _likeOverride = null;
+        // reverse the optimistic UI update
+        _likeOverride = !_likeOverride!;
         notifyListeners();
+
+        updateFromApiCommand.execute();
       },
     );
 
