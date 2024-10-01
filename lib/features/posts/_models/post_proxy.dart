@@ -15,7 +15,7 @@ class PostProxy extends ChangeNotifier {
 
   void _upDateTarget(PostDto postDto) {
     _likeOverride = null;
-    _optimisticLike = null;
+    _likeOverride = null;
     _target = postDto;
     notifyListeners();
   }
@@ -23,11 +23,9 @@ class PostProxy extends ChangeNotifier {
   int get id => _target!.id;
   String get title => _target!.title;
   String get imageUrl => _target!.imageUrl;
-  bool get isLiked => _optimisticLike ?? _likeOverride ?? _target!.isLiked;
-  // last successful like state change without update from the server
-  bool? _likeOverride;
+  bool get isLiked => _likeOverride ?? _target!.isLiked;
   // optimistic UI update
-  bool? _optimisticLike;
+  bool? _likeOverride;
 
   void updateFromApi() {
     di<ApiClient>().getPost(_target!.id).then((postDto) {
@@ -37,11 +35,10 @@ class PostProxy extends ChangeNotifier {
 
   /// optimistic UI update
   Future<void> like(BuildContext context) async {
-    _optimisticLike = true;
+    _likeOverride = true;
     notifyListeners();
     try {
       await di<ApiClient>().likePost(_target!.id);
-      _likeOverride = true;
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -50,17 +47,16 @@ class PostProxy extends ChangeNotifier {
           ),
         );
       }
-      _optimisticLike = null;
+      _likeOverride = !_likeOverride!;
       notifyListeners();
     }
   }
 
   Future<void> unlike(BuildContext context) async {
-    _optimisticLike = false;
+    _likeOverride = false;
     notifyListeners();
     try {
       await di<ApiClient>().unlikePost(_target!.id);
-      _likeOverride = false;
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +65,7 @@ class PostProxy extends ChangeNotifier {
           ),
         );
       }
-      _optimisticLike = null;
+      _likeOverride = !_likeOverride!;
       notifyListeners();
     }
   }
