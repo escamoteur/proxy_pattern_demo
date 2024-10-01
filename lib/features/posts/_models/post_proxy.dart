@@ -24,11 +24,9 @@ class PostProxy extends ChangeNotifier {
   int get id => _target!.id;
   String get title => _target!.title;
   String get imageUrl => _target!.imageUrl;
-  bool get isLiked => _optimisticLike ?? _likeOverride ?? _target!.isLiked;
-  // last successful like state change without update from the server
-  bool? _likeOverride;
+  bool get isLiked => _likeOverride ?? _target!.isLiked;
   // optimistic UI update
-  bool? _optimisticLike;
+  bool? _likeOverride;
 
   /// create a combined ValueListenable based on the updateDataCommands of
   /// the data sources and local updateFromApiCommand
@@ -48,10 +46,9 @@ class PostProxy extends ChangeNotifier {
   late final likeCommand = Command.createAsyncNoParamNoResult(
     () async {
       /// optimistic UI update
-      _optimisticLike = true;
+      _likeOverride = true;
       notifyListeners();
       await di<ApiClient>().likePost(_target!.id);
-      _likeOverride = true;
     },
     // block the command if we update from the api
     restriction: commandRestrictions,
@@ -60,7 +57,7 @@ class PostProxy extends ChangeNotifier {
   )..errors.listen(
       (e, _) {
         // reverse the optimistic UI update
-        _optimisticLike = null;
+        _likeOverride = !_likeOverride!;
         notifyListeners();
       },
     );
@@ -68,10 +65,9 @@ class PostProxy extends ChangeNotifier {
   late final unlikeCommand = Command.createAsyncNoParamNoResult(
     () async {
       /// optimistic UI update
-      _optimisticLike = false;
+      _likeOverride = false;
       notifyListeners();
       await di<ApiClient>().unlikePost(_target!.id);
-      _likeOverride = false;
     },
     // block the command if we update from the api
     restriction: commandRestrictions,
@@ -79,7 +75,7 @@ class PostProxy extends ChangeNotifier {
   )..errors.listen(
       (e, _) {
         // reverse the optimistic UI update
-        _likeOverride = null;
+        _likeOverride = !_likeOverride!;
         notifyListeners();
       },
     );
