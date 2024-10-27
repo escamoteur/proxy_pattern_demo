@@ -43,50 +43,36 @@ class PostProxy extends ChangeNotifier {
     restriction: di<PostManager>().updateFromApiIsExecuting,
   );
 
-  late final likeCommand = Command.createAsyncNoParamNoResult(
-    () async {
+  late final toggleLikeCommand = Command.createUndoableNoParamNoResult<bool>(
+    (undoStack) async {
+      undoStack.push(isLiked);
+
       /// optimistic UI update
-      _likeOverride = true;
+
+      _likeOverride = !isLiked;
       notifyListeners();
-      await di<ApiClient>().likePost(_target!.id);
+      if (_likeOverride!) {
+        await di<ApiClient>().likePost(_target!.id);
+      } else {
+        await di<ApiClient>().unlikePost(_target!.id);
+      }
+    },
+    undo: (undoStack, reason) {
+      _likeOverride = undoStack.pop();
+      notifyListeners();
     },
     // block the command if we update from the api
     restriction: commandRestrictions,
     // we want that the error is handled locally and globally in TheAppImplementation
-    errorFilter: const ErrorHandlerLocalAndGlobal(),
-  )..errors.listen(
-      (e, _) {
-        // reverse the optimistic UI update
-        _likeOverride = !_likeOverride!;
-        notifyListeners();
-      },
-    );
-
-  late final unlikeCommand = Command.createAsyncNoParamNoResult(
-    () async {
-      /// optimistic UI update
-      _likeOverride = false;
-      notifyListeners();
-      await di<ApiClient>().unlikePost(_target!.id);
-    },
-    // block the command if we update from the api
-    restriction: commandRestrictions,
-    errorFilter: const ErrorHandlerLocalAndGlobal(),
-  )..errors.listen(
-      (e, _) {
-        // reverse the optimistic UI update
-        _likeOverride = !_likeOverride!;
-        notifyListeners();
-      },
-    );
+    errorFilter: const ErrorHandlerGlobalIfNoLocal(),
+  );
 
   @override
   void dispose() {
     /// we have to dispose all Commands because
     /// they contain a lot of ValueNotifiers
     updateFromApiCommand.dispose();
-    likeCommand.dispose();
-    unlikeCommand.dispose();
+    toggleLikeCommand.dispose();
     super.dispose();
   }
 }

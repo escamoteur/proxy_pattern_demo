@@ -36,12 +36,12 @@ class PostCard extends WatchingWidget {
               if (post.isLiked)
                 CommandIconButton(
                   icon: Icons.favorite,
-                  command: post.unlikeCommand,
+                  command: post.toggleLikeCommand,
                 )
               else
                 CommandIconButton(
                   icon: Icons.favorite_border,
-                  command: post.likeCommand,
+                  command: post.toggleLikeCommand,
                 ),
               const SizedBox(width: 8),
               CommandIconButton(
