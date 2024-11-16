@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:proxy_pattern_demo/di.dart';
-import 'package:proxy_pattern_demo/features/posts/_manager/post_manager_.dart';
 import 'package:proxy_pattern_demo/home_page.dart';
 import 'package:watch_it/watch_it.dart';
 
