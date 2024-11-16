@@ -22,7 +22,8 @@ class ApiClientMock implements ApiClient {
     await Future.delayed(const Duration(seconds: 2));
     _mockData = parsed
         .asMap()
-        .map((index, value) => MapEntry(index, PostDto.fromJson(index, value)))
+        .map((index, value) => MapEntry(
+            index, PostDto.fromJson(index, value as Map<String, dynamic>)))
         .values
         .toList();
     return _mockData;
