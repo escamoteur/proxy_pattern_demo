@@ -18,8 +18,8 @@ class ApiClientMock implements ApiClient {
 
   @override
   Future<List<PostDto>> getPosts() async {
-    final List<dynamic> parsed = json.decode(_jsonString);
-    await Future.delayed(const Duration(seconds: 2));
+    final List<dynamic> parsed = json.decode(_jsonString) as List<dynamic>;
+    await Future<void>.delayed(const Duration(seconds: 2));
     _mockData = parsed
         .asMap()
         .map((index, value) => MapEntry(
