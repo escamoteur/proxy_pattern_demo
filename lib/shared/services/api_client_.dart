@@ -17,9 +17,9 @@ class PostDto {
   factory PostDto.fromJson(int id, Map<String, dynamic> json) {
     return PostDto(
       id: id,
-      title: json['title'],
-      imageUrl: json['imageUrl'],
-      isLiked: json['isLiked'],
+      title: json['title'] as String,
+      imageUrl: json['imageUrl'] as String,
+      isLiked: json['isLiked'] as bool,
     );
   }
 }
