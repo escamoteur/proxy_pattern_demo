@@ -5,7 +5,7 @@ import 'package:proxy_pattern_demo/shared/services/api_client_.dart';
 import 'package:watch_it/watch_it.dart';
 
 class PostProxy extends ChangeNotifier {
-  PostDto? _target;
+  PostDto _target;
   int referenceCount = 0;
 
   PostProxy(this._target);
@@ -21,10 +21,10 @@ class PostProxy extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get id => _target!.id;
-  String get title => _target!.title;
-  String get imageUrl => _target!.imageUrl;
-  bool get isLiked => _likeOverride ?? _target!.isLiked;
+  int get id => _target.id;
+  String get title => _target.title;
+  String get imageUrl => _target.imageUrl;
+  bool get isLiked => _likeOverride ?? _target.isLiked;
   // optimistic UI update
   bool? _likeOverride;
 
@@ -36,7 +36,7 @@ class PostProxy extends ChangeNotifier {
 
   late final updateFromApiCommand = Command.createAsyncNoParamNoResult(
     () async {
-      final postDto = await di<ApiClient>().getPost(_target!.id);
+      final postDto = await di<ApiClient>().getPost(_target.id);
       _updateTarget(postDto);
     },
     // block the command if any updateDataCommand is executing
@@ -52,9 +52,9 @@ class PostProxy extends ChangeNotifier {
       _likeOverride = !isLiked;
       notifyListeners();
       if (_likeOverride!) {
-        await di<ApiClient>().likePost(_target!.id);
+        await di<ApiClient>().likePost(_target.id);
       } else {
-        await di<ApiClient>().unlikePost(_target!.id);
+        await di<ApiClient>().unlikePost(_target.id);
       }
     },
     undo: (undoStack, reason) {
