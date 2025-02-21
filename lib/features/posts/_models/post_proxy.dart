@@ -3,7 +3,7 @@ import 'package:proxy_pattern_demo/shared/services/api_client_.dart';
 import 'package:watch_it/watch_it.dart';
 
 class PostProxy extends ChangeNotifier {
-  PostDto? _target;
+  late PostDto _target;
   int referenceCount = 0;
 
   PostProxy(this._target);
@@ -20,15 +20,15 @@ class PostProxy extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get id => _target!.id;
-  String get title => _target!.title;
-  String get imageUrl => _target!.imageUrl;
-  bool get isLiked => _likeOverride ?? _target!.isLiked;
+  int get id => _target.id;
+  String get title => _target.title;
+  String get imageUrl => _target.imageUrl;
+  bool get isLiked => _likeOverride ?? _target.isLiked;
   // optimistic UI update
   bool? _likeOverride;
 
   void updateFromApi() {
-    di<ApiClient>().getPost(_target!.id).then((postDto) {
+    di<ApiClient>().getPost(_target.id).then((postDto) {
       _upDateTarget(postDto);
     });
   }
@@ -38,7 +38,7 @@ class PostProxy extends ChangeNotifier {
     _likeOverride = true;
     notifyListeners();
     try {
-      await di<ApiClient>().likePost(_target!.id);
+      await di<ApiClient>().likePost(_target.id);
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -56,7 +56,7 @@ class PostProxy extends ChangeNotifier {
     _likeOverride = false;
     notifyListeners();
     try {
-      await di<ApiClient>().unlikePost(_target!.id);
+      await di<ApiClient>().unlikePost(_target.id);
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
