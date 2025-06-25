@@ -34,7 +34,7 @@ class PostProxy extends ChangeNotifier {
           ),
         );
       }
-      _likeOverride = null;
+      _likeOverride = !_likeOverride!;
       notifyListeners();
     }
   }
@@ -52,7 +52,7 @@ class PostProxy extends ChangeNotifier {
           ),
         );
       }
-      _likeOverride = null;
+      _likeOverride = !_likeOverride!;
       notifyListeners();
     }
   }
