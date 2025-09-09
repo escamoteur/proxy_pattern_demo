@@ -33,10 +33,8 @@ class ApiClientMock implements ApiClient {
   static const _mockDataJson = '''
 [
   {
-
-
-    "title": "Why Cats Hate Mondays",
-    "imageUrl": "https://loremflickr.com/400/300/cat",
+    "title": "Paul Jarvis",
+    "imageUrl": "https://picsum.photos/id/18/400/300",
     "isLiked": true
   },
   {
@@ -45,8 +43,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "Pizza: A Love Story",
-    "imageUrl": "https://loremflickr.com/400/300/pizza",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/20/400/300",
     "isLiked": true
   },
   {
@@ -60,8 +58,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "Why Tacos are Better Than Therapy",
-    "imageUrl": "https://loremflickr.com/400/300/tacos",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/22/400/300",
     "isLiked": false
   },
   {
@@ -75,8 +73,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "Adventures in Netflix Bingeing",
-    "imageUrl": "https://loremflickr.com/400/300/netflix",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/24/400/300",
     "isLiked": true
   },
   {
@@ -90,8 +88,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "How to Survive Without Wi-Fi",
-    "imageUrl": "https://loremflickr.com/400/300/technology",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/26/400/300",
     "isLiked": false
   },
   {
@@ -105,8 +103,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "Confessions of a Chocolate Addict",
-    "imageUrl": "https://loremflickr.com/400/300/chocolate",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/28/400/300",
     "isLiked": true
   },
   {
@@ -120,8 +118,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "The Mystery of Missing Socks",
-    "imageUrl": "https://loremflickr.com/400/300/socks",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/30/400/300",
     "isLiked": false
   },
   {
@@ -135,8 +133,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "The Art of Doing Nothing",
-    "imageUrl": "https://loremflickr.com/400/300/relax",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/32/400/300",
     "isLiked": true
   },
   {
@@ -150,8 +148,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "Pizza vs. Tacos: The Ultimate Showdown",
-    "imageUrl": "https://loremflickr.com/400/300/pizza,tacos",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/34/400/300",
     "isLiked": false
   },
   {
@@ -165,8 +163,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "When Your Alarm Betrays You",
-    "imageUrl": "https://loremflickr.com/400/300/clock",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/36/400/300",
     "isLiked": true
   },
   {
@@ -180,8 +178,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "Why Pancakes Are Superior",
-    "imageUrl": "https://loremflickr.com/400/300/pancakes",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/38/400/300",
     "isLiked": false
   },
   {
@@ -195,8 +193,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "Cats: Masters of the Universe",
-    "imageUrl": "https://loremflickr.com/400/300/cats",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/40/400/300",
     "isLiked": true
   },
   {
@@ -210,8 +208,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "Why Donuts Make You Happy",
-    "imageUrl": "https://loremflickr.com/400/300/donuts",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/42/400/300",
     "isLiked": false
   },
   {
@@ -225,8 +223,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "When You Can't Find the Remote",
-    "imageUrl": "https://loremflickr.com/400/300/remote",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/44/400/300",
     "isLiked": true
   },
   {
@@ -240,8 +238,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "The Joy of Sleeping In",
-    "imageUrl": "https://loremflickr.com/400/300/sleeping",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/46/400/300",
     "isLiked": false
   },
   {
@@ -255,8 +253,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": false
   },
   {
-    "title": "The Epic Tale of Missing Car Keys",
-    "imageUrl": "https://loremflickr.com/400/300/carkeys",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/48/400/300",
     "isLiked": true
   },
   {
@@ -270,8 +268,8 @@ class ApiClientMock implements ApiClient {
     "isLiked": true
   },
   {
-    "title": "How to Win at Hide and Seek",
-    "imageUrl": "https://loremflickr.com/400/300/hideandseek",
+    "title": "Alejandro Escamilla",
+    "imageUrl": "https://picsum.photos/id/50/400/300",
     "isLiked": false
   },
   {
